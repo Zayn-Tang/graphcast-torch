@@ -25,25 +25,10 @@ import pickle
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 
-'''
-import torch
-# 1) 初始化
-torch.distributed.init_process_group(backend="nccl")
-local_rank = torch.distributed.get_rank()
-print(local_rank)
-torch.cuda.set_device(local_rank)
-device = torch.device("cuda", local_rank)
-print(device)
-'''
-
-#--nproc_per_node=2 一般用几张卡,就设为几
-
 
 SAVE_PATH = Path('./output/graphcast20/')
 # SAVE_PATH.mkdir(parents=True, exist_ok=True)
 
-# device = torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
-# print(device)
 data_dir = '/root/autodl-tmp'
 
 def chunk_time(ds):
@@ -63,14 +48,6 @@ def load_dataset():
     ds = chunk_time(ds)
     return ds
 
-# ds = load_dataset().x
-# shape = ds.shape # batch x channel x lat x lon 
-# times = ds.time.values
-
-# init_times = times[slice(1, -21)] 
-# num_data = len(init_times)
-# names = list(ds.channel.values)
-# test_names = names[-5:]
 
 def compute_rmse(out, tgt):
     rmse = torch.sqrt(((out - tgt)**2).mean())
